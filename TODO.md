@@ -8,23 +8,29 @@
 |----|------|--------|-------|-------|----------|-------|
 | T001 | Create todo list for issues | ✅ Complete | - | #4 | P1 | This file |
 | T002 | Verify AGENTS.md accuracy | ✅ Complete | opencode | #9 | P1 | All commands work, structure matches, examples correct |
-| T003 | Fix log session dialog | 🔴 Blocked | - | #8 | P2 | Core feature broken |
-| T004 | Fix trick selection dropdown | 🔴 Blocked | - | #7 | P2 | Core feature broken |
+| T003 | Fix log session dialog | ⚪ Pending | - | #8 | P2 | Core feature broken |
+| T004 | Fix trick selection dropdown | ⚪ Pending | - | #7 | P2 | Core feature broken |
 | T005 | Enhance trick database | ⚪ Pending | - | #3 | P3 | Add ~20 tricks from PDF across 5 levels |
 | T006 | Allow freetext in dropdowns | ⚪ Pending | - | #6 | P3 | Workaround for CRUD ops |
 | T007 | CRUD operations for dropdowns | ⚪ Pending | - | #5 | P4 | Nice-to-have for maintenance |
 | T008 | Offline-first support | ⚪ Pending | - | #2 | P4 | Queue writes when offline |
 
-## New Features from PDF (Not Yet Tracked)
+## Features from PDF (All Implemented)
 
 | ID | Task | Status | Agent | Priority | Notes |
 |----|------|--------|-------|----------|-------|
-| T009 | Phase/Gate tracking system | ⚪ Pending | - | P2 | 4 phases with go/no-go checkpoints |
-| T010 | Weekly review system | ⚪ Pending | - | P2 | Trick mastery %, session logs, weekly reviews |
-| T011 | Crash taxonomy categorization | ⚪ Pending | - | P3 | orient/throttle/timing/spatial/propwash/etc. |
-| T012 | Drill library with mastery targets | ⚪ Pending | - | P3 | Specific drills with success criteria |
-| T013 | Equipment status inventory | ⚪ Pending | - | P3 | Props/frames/batteries tracking |
-| T014 | Session template enhancement | ⚪ Pending | - | P2 | Pack-level logging (voltage, focus, crashes) |
+| T009 | Phase/Gate tracking system | ✅ Exists | - | - | `gate_checks`, `gate_progress` tables + API |
+| T010 | Weekly review system | ✅ Exists | - | - | `weekly_reviews`, `mastery_snapshots` + API |
+| T011 | Crash taxonomy categorization | ✅ Exists | - | - | `crashes` table with failure_type/root_cause |
+| T012 | Drill library with mastery targets | ✅ Exists | - | - | `drills` table with mastery_criteria |
+| T013 | Equipment status inventory | ✅ Exists | - | - | `equipment`, `equipment_log` tables + API |
+| T014 | Session template enhancement | ✅ Exists | - | - | `packs` table with voltage/focus/crashes |
+
+## Test Coverage Gaps
+
+| ID | Task | Status | Agent | Issue | Priority | Notes |
+|----|------|--------|-------|-------|----------|-------|
+| T015 | Expand CI test coverage | 🟡 In Progress | opencode | - | P2 | Fix bugs + add pack/crash/review/gate/equip tests |
 
 ## Status Legend
 

@@ -66,9 +66,34 @@ jobs:
           [ "$SID" != "null" ] || { echo "FAIL: session not created"; exit 1; }
 
           echo "=== Add trick attempt ==="
-          curl -sf -X POST "http://localhost:3000/api/sessions/$SID/attempts" \
+          curl -sf -X POST "http://localhost:3000/api/sessions/$SID/tricks" \
             -H 'Content-Type: application/json' \
-            -d '{"trick_id":1,"attempts":10,"lands":7,"notes":"CI test"}' | jq .
+            -d '{"trick_id":1,"attempts":10,"landed":7,"notes":"CI test"}' | jq .
+
+          echo "=== Add pack ==="
+          PACK=$(curl -sf -X POST "http://localhost:3000/api/sessions/$SID/packs" \
+            -H 'Content-Type: application/json' \
+            -d '{"voltage_start":4.2,"voltage_end":3.5,"focus":"power loops","crashes":2}')
+          PACK_ID=$(echo "$PACK" | jq .id)
+          echo "Created pack $PACK_ID"
+
+          echo "=== Add crash ==="
+          curl -sf -X POST "http://localhost:3000/api/sessions/$SID/crashes" \
+            -H 'Content-Type: application/json' \
+            -d '{"pack_number":1,"trick_id":1,"failure_type":"throttle","root_cause":"pilot"}' | jq .
+
+          echo "=== Add session review ==="
+          curl -sf -X POST "http://localhost:3000/api/sessions/$SID/review" \
+            -H 'Content-Type: application/json' \
+            -d '{"good_1":"timing improved","improve_1":"exit consistency","fatigue":"good"}' | jq .
+
+          echo "=== Gate checks ==="
+          GATES=$(curl -sf http://localhost:3000/api/progress/gates)
+          echo "Found $(echo "$GATES" | jq length) gate checks"
+
+          echo "=== Equipment ==="
+          EQUIP=$(curl -sf http://localhost:3000/api/equipment)
+          echo "Found $(echo "$EQUIP" | jq length) equipment items"
 
           echo "=== Stats ==="
           curl -sf http://localhost:3000/api/progress/stats | jq .
