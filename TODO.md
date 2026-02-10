@@ -7,7 +7,7 @@
 | ID | Task | Status | Agent | Issue | Priority | Notes |
 |----|------|--------|-------|-------|----------|-------|
 | T001 | Create todo list for issues | ✅ Complete | - | #4 | P1 | This file |
-| T002 | Verify AGENTS.md accuracy | ⚪ Pending | - | #9 | P1 | Execute all commands, verify completeness |
+| T002 | Verify AGENTS.md accuracy | ✅ Complete | opencode | #9 | P1 | All commands work, structure matches, examples correct |
 | T003 | Fix log session dialog | 🔴 Blocked | - | #8 | P2 | Core feature broken |
 | T004 | Fix trick selection dropdown | 🔴 Blocked | - | #7 | P2 | Core feature broken |
 | T005 | Enhance trick database | ⚪ Pending | - | #3 | P3 | Add ~20 tricks from PDF across 5 levels |
