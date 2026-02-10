@@ -30,7 +30,7 @@
 
 | ID | Task | Status | Agent | Issue | Priority | Notes |
 |----|------|--------|-------|-------|----------|-------|
-| T015 | Expand CI test coverage | 🟡 In Progress | opencode | - | P2 | Fix bugs + add pack/crash/review/gate/equip tests |
+| T015 | Expand CI test coverage | ✅ Complete | opencode | #10 | Fixed bugs + added pack/crash/review/gate/equip tests |
 
 ## Status Legend
 

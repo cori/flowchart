@@ -194,3 +194,31 @@ public/
 - No authentication/authorization (self-hosted, single user)
 - Data is stored in SQLite file at `data/fpv-tracker.db`
 - Frontend has no build step - edit HTML/CSS/JS and refresh
+
+## Testing Workflows
+
+### Smoke Testing Against Running Server
+
+Start server in background, run tests, then kill:
+
+```bash
+node --import tsx src/server.ts &
+SERVER_PID=$!
+sleep 2
+curl -sf http://localhost:3000/api/health | jq .
+# ... more tests ...
+kill $SERVER_PID
+```
+
+### Common API Endpoints to Test
+
+- `GET /api/health` - Health check
+- `GET /api/tricks` - List tricks
+- `POST /api/sessions` - Create session, returns `{id}`
+- `POST /api/sessions/:id/tricks` - Add trick attempt (note: `landed` not `lands`)
+- `POST /api/sessions/:id/packs` - Add pack with voltage/focus/crashes
+- `POST /api/sessions/:id/crashes` - Log crash with failure_type
+- `POST /api/sessions/:id/review` - Session review (3 good, 3 improve, fatigue, etc.)
+- `GET /api/progress/gates` - Gate checks for phase progression
+- `GET /api/progress/mastery` - Trick mastery stats
+- `GET /api/equipment` - Equipment inventory
