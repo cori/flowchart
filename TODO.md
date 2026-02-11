@@ -8,8 +8,8 @@
 |----|------|--------|-------|-------|----------|-------|
 | T001 | Create todo list for issues | ✅ Complete | - | #4 | P1 | This file |
 | T002 | Verify AGENTS.md accuracy | ✅ Complete | opencode | #9 | P1 | All commands work, structure matches, examples correct |
-| T003 | Fix log session dialog | ⚪ Pending | - | #8 | P2 | Core feature broken |
-| T004 | Fix trick selection dropdown | ⚪ Pending | - | #7 | P2 | Core feature broken |
+| T003 | Fix log session dialog | ✅ Complete | opencode | #8 | Modal moved outside page structure |
+| T004 | Fix trick selection dropdown | ✅ Complete | opencode | #7 | Lazy-load tricks in showTrickPicker |
 | T005 | Enhance trick database | ⚪ Pending | - | #3 | P3 | Add ~20 tricks from PDF across 5 levels |
 | T006 | Allow freetext in dropdowns | ⚪ Pending | - | #6 | P3 | Workaround for CRUD ops |
 | T007 | CRUD operations for dropdowns | ⚪ Pending | - | #5 | P4 | Nice-to-have for maintenance |
