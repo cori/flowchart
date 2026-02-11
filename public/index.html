@@ -36,131 +36,6 @@
         <button id="btn-new-session-2" class="btn-small">+ New</button>
       </header>
       <div id="session-list"></div>
-
-      <!-- Session Form (hidden by default) -->
-      <div id="session-form" class="modal" hidden>
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2 id="session-form-title">New Session</h2>
-            <button class="btn-close" onclick="closeSessionForm()">&times;</button>
-          </div>
-          <div class="form-tabs">
-            <button class="form-tab active" data-tab="tab-header">Info</button>
-            <button class="form-tab" data-tab="tab-packs">Packs</button>
-            <button class="form-tab" data-tab="tab-tricks">Tricks</button>
-            <button class="form-tab" data-tab="tab-crashes">Crashes</button>
-            <button class="form-tab" data-tab="tab-review">Review</button>
-          </div>
-
-          <!-- Header tab -->
-          <div id="tab-header" class="form-tab-content active">
-            <label>Date <input type="date" id="sf-date"></label>
-            <div class="row">
-              <label>Start <input type="time" id="sf-time-start"></label>
-              <label>End <input type="time" id="sf-time-end"></label>
-            </div>
-            <label>Location
-              <select id="sf-location">
-                <option value="home-room-A">Home Room A</option>
-                <option value="home-room-B">Home Room B</option>
-                <option value="library">Library</option>
-                <option value="outdoor-field">Outdoor Field</option>
-                <option value="outdoor-park">Outdoor Park</option>
-                <option value="sim">Simulator</option>
-              </select>
-            </label>
-            <label>Platform
-              <select id="sf-platform">
-                <option value="Air65">Air65</option>
-                <option value="Mobula6">Mobula6</option>
-                <option value="Meteor75">Meteor75 Pro</option>
-                <option value="Rekon3">Rekon3 Nano</option>
-                <option value="5-inch">5-inch Build</option>
-                <option value="sim-whoop">Sim (Whoop)</option>
-                <option value="sim-5inch">Sim (5-inch)</option>
-              </select>
-            </label>
-            <label>Weather
-              <select id="sf-weather">
-                <option value="indoor">Indoor</option>
-                <option value="calm">Calm</option>
-                <option value="5-8mph">5-8 mph</option>
-                <option value="8-12mph">8-12 mph</option>
-                <option value="12-15mph">12-15 mph</option>
-                <option value="15+mph">15+ mph</option>
-              </select>
-            </label>
-            <label>Session Type
-              <select id="sf-type">
-                <option value="blocked-drill">Blocked Drill</option>
-                <option value="interleaved">Interleaved</option>
-                <option value="free-flow">Free Flow</option>
-                <option value="DVR-review">DVR Review</option>
-                <option value="sim">Simulator</option>
-              </select>
-            </label>
-            <label>Notes <textarea id="sf-notes" rows="2"></textarea></label>
-          </div>
-
-          <!-- Packs tab -->
-          <div id="tab-packs" class="form-tab-content">
-            <div id="pack-list"></div>
-            <button id="btn-add-pack" class="btn-secondary">+ Add Pack</button>
-          </div>
-
-          <!-- Tricks tab -->
-          <div id="tab-tricks" class="form-tab-content">
-            <div id="trick-attempt-list"></div>
-            <button id="btn-add-trick-attempt" class="btn-secondary">+ Add Trick</button>
-          </div>
-
-          <!-- Crashes tab -->
-          <div id="tab-crashes" class="form-tab-content">
-            <div id="crash-list-form"></div>
-            <button id="btn-add-crash" class="btn-secondary">+ Add Crash</button>
-          </div>
-
-          <!-- Review tab -->
-          <div id="tab-review" class="form-tab-content">
-            <h3>3 Things Done Well</h3>
-            <input type="text" id="sf-good1" placeholder="1...">
-            <input type="text" id="sf-good2" placeholder="2...">
-            <input type="text" id="sf-good3" placeholder="3...">
-            <h3>3 Things to Improve</h3>
-            <input type="text" id="sf-improve1" placeholder="1...">
-            <input type="text" id="sf-improve2" placeholder="2...">
-            <input type="text" id="sf-improve3" placeholder="3...">
-            <div class="row">
-              <label>Fatigue
-                <select id="sf-fatigue">
-                  <option value="fresh">Fresh</option>
-                  <option value="good" selected>Good</option>
-                  <option value="tired">Tired</option>
-                  <option value="sloppy">Sloppy</option>
-                </select>
-              </label>
-              <label>Frustration
-                <select id="sf-frustration">
-                  <option value="none" selected>None</option>
-                  <option value="mild">Mild</option>
-                  <option value="moderate">Moderate</option>
-                  <option value="high">High</option>
-                </select>
-              </label>
-            </div>
-            <label class="checkbox-label">
-              <input type="checkbox" id="sf-stopped" checked> Stopped before encoding bad habits?
-            </label>
-            <label>Tomorrow's Focus <input type="text" id="sf-tomorrow"></label>
-            <label>Sim Drill Tonight <input type="text" id="sf-sim-drill"></label>
-            <label>DVR Timestamps <input type="text" id="sf-dvr"></label>
-            <label class="checkbox-label">
-              <input type="checkbox" id="sf-blackbox"> Blackbox recorded?
-            </label>
-            <button class="btn-primary" onclick="saveReview()">Save Review</button>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- PROGRESS TAB -->
@@ -206,6 +81,131 @@
       </div>
     </section>
   </main>
+
+  <!-- Session Form Modal (outside pages so it works from any tab) -->
+  <div id="session-form" class="modal" hidden>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="session-form-title">New Session</h2>
+        <button class="btn-close" onclick="closeSessionForm()">&times;</button>
+      </div>
+      <div class="form-tabs">
+        <button class="form-tab active" data-tab="tab-header">Info</button>
+        <button class="form-tab" data-tab="tab-packs">Packs</button>
+        <button class="form-tab" data-tab="tab-tricks">Tricks</button>
+        <button class="form-tab" data-tab="tab-crashes">Crashes</button>
+        <button class="form-tab" data-tab="tab-review">Review</button>
+      </div>
+
+      <!-- Header tab -->
+      <div id="tab-header" class="form-tab-content active">
+        <label>Date <input type="date" id="sf-date"></label>
+        <div class="row">
+          <label>Start <input type="time" id="sf-time-start"></label>
+          <label>End <input type="time" id="sf-time-end"></label>
+        </div>
+        <label>Location
+          <select id="sf-location">
+            <option value="home-room-A">Home Room A</option>
+            <option value="home-room-B">Home Room B</option>
+            <option value="library">Library</option>
+            <option value="outdoor-field">Outdoor Field</option>
+            <option value="outdoor-park">Outdoor Park</option>
+            <option value="sim">Simulator</option>
+          </select>
+        </label>
+        <label>Platform
+          <select id="sf-platform">
+            <option value="Air65">Air65</option>
+            <option value="Mobula6">Mobula6</option>
+            <option value="Meteor75">Meteor75 Pro</option>
+            <option value="Rekon3">Rekon3 Nano</option>
+            <option value="5-inch">5-inch Build</option>
+            <option value="sim-whoop">Sim (Whoop)</option>
+            <option value="sim-5inch">Sim (5-inch)</option>
+          </select>
+        </label>
+        <label>Weather
+          <select id="sf-weather">
+            <option value="indoor">Indoor</option>
+            <option value="calm">Calm</option>
+            <option value="5-8mph">5-8 mph</option>
+            <option value="8-12mph">8-12 mph</option>
+            <option value="12-15mph">12-15 mph</option>
+            <option value="15+mph">15+ mph</option>
+          </select>
+        </label>
+        <label>Session Type
+          <select id="sf-type">
+            <option value="blocked-drill">Blocked Drill</option>
+            <option value="interleaved">Interleaved</option>
+            <option value="free-flow">Free Flow</option>
+            <option value="DVR-review">DVR Review</option>
+            <option value="sim">Simulator</option>
+          </select>
+        </label>
+        <label>Notes <textarea id="sf-notes" rows="2"></textarea></label>
+      </div>
+
+      <!-- Packs tab -->
+      <div id="tab-packs" class="form-tab-content">
+        <div id="pack-list"></div>
+        <button id="btn-add-pack" class="btn-secondary">+ Add Pack</button>
+      </div>
+
+      <!-- Tricks tab -->
+      <div id="tab-tricks" class="form-tab-content">
+        <div id="trick-attempt-list"></div>
+        <button id="btn-add-trick-attempt" class="btn-secondary">+ Add Trick</button>
+      </div>
+
+      <!-- Crashes tab -->
+      <div id="tab-crashes" class="form-tab-content">
+        <div id="crash-list-form"></div>
+        <button id="btn-add-crash" class="btn-secondary">+ Add Crash</button>
+      </div>
+
+      <!-- Review tab -->
+      <div id="tab-review" class="form-tab-content">
+        <h3>3 Things Done Well</h3>
+        <input type="text" id="sf-good1" placeholder="1...">
+        <input type="text" id="sf-good2" placeholder="2...">
+        <input type="text" id="sf-good3" placeholder="3...">
+        <h3>3 Things to Improve</h3>
+        <input type="text" id="sf-improve1" placeholder="1...">
+        <input type="text" id="sf-improve2" placeholder="2...">
+        <input type="text" id="sf-improve3" placeholder="3...">
+        <div class="row">
+          <label>Fatigue
+            <select id="sf-fatigue">
+              <option value="fresh">Fresh</option>
+              <option value="good" selected>Good</option>
+              <option value="tired">Tired</option>
+              <option value="sloppy">Sloppy</option>
+            </select>
+          </label>
+          <label>Frustration
+            <select id="sf-frustration">
+              <option value="none" selected>None</option>
+              <option value="mild">Mild</option>
+              <option value="moderate">Moderate</option>
+              <option value="high">High</option>
+            </select>
+          </label>
+        </div>
+        <label class="checkbox-label">
+          <input type="checkbox" id="sf-stopped" checked> Stopped before encoding bad habits?
+        </label>
+        <label>Tomorrow's Focus <input type="text" id="sf-tomorrow"></label>
+        <label>Sim Drill Tonight <input type="text" id="sf-sim-drill"></label>
+        <label>DVR Timestamps <input type="text" id="sf-dvr"></label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="sf-blackbox"> Blackbox recorded?
+        </label>
+        <button class="btn-primary" onclick="saveReview()">Save Review</button>
+      </div>
+    </div>
+  </div>
 
   <nav id="bottom-nav">
     <button class="nav-btn active" data-page="page-today">

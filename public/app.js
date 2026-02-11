@@ -327,7 +327,10 @@ function renderTrickAttempts(attempts) {
 
 document.getElementById('btn-add-trick-attempt').addEventListener('click', () => showTrickPicker());
 
-function showTrickPicker() {
+async function showTrickPicker() {
+  if (!allTricks.length) {
+    allTricks = await api('/tricks');
+  }
   if (!allTricks.length) return;
   const picker = document.createElement('div');
   picker.className = 'trick-picker';
