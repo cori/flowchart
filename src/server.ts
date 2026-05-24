@@ -1,6 +1,11 @@
+import { readFileSync } from 'node:fs';
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Hono } from 'hono';
+
+const { version: APP_VERSION } = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf-8')
+);
 
 import sessions from './api/sessions.js';
 import progress from './api/progress.js';
@@ -20,7 +25,7 @@ app.route('/api/denver', denver);
 app.route('/api/data', exportimport);
 
 // Health check
-app.get('/api/health', (c) => c.json({ status: 'ok', version: '1.0.0' }));
+app.get('/api/health', (c) => c.json({ status: 'ok', version: APP_VERSION }));
 
 // Static files
 app.use('/*', serveStatic({ root: './public' }));

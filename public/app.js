@@ -673,4 +673,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // ===== Init =====
+api('/health').then(data => {
+  if (data.version) document.getElementById('app-version').textContent = `v${data.version}`;
+}).catch(() => {});
 loadToday();
