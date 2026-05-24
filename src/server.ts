@@ -2,17 +2,16 @@ import { readFileSync } from 'node:fs';
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Hono } from 'hono';
-
-const { version: APP_VERSION } = JSON.parse(
-  readFileSync(new URL('../package.json', import.meta.url), 'utf-8')
-);
-
 import sessions from './api/sessions.js';
 import progress from './api/progress.js';
 import tricks from './api/tricks.js';
 import equipment from './api/equipment.js';
 import denver from './api/denver.js';
 import exportimport from './api/exportimport.js';
+
+const { version: APP_VERSION } = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf-8')
+);
 
 const app = new Hono();
 

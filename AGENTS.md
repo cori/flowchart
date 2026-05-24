@@ -52,6 +52,7 @@ import { getDb } from '../db/index.js';
 - External packages first, then local imports
 - Always include `.js` extension for local imports (even for `.ts` files)
 - Use named imports; avoid `import *`
+- All `import` statements must come before any executable code — no initialisation between import groups
 
 ### TypeScript
 
