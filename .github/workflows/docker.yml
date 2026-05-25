@@ -75,3 +75,53 @@ jobs:
 
           echo "Docker image test passed!"
           docker stop fpv-test
+
+  update-rtappstore:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Update rtappstore config and image tag
+        env:
+          RTAPPSTORE_PAT: ${{ secrets.RTAPPSTORE_PAT }}
+        run: |
+          if [ -z "$RTAPPSTORE_PAT" ]; then
+            echo "RTAPPSTORE_PAT not configured, skipping rtappstore update"
+            exit 0
+          fi
+          export GH_TOKEN="$RTAPPSTORE_PAT"
+          SHORT_SHA="${GITHUB_SHA::7}"
+          NEW_IMAGE="ghcr.io/cori/flowchart:sha-${SHORT_SHA}"
+
+          # Update config.json: increment tipi_version and update version string
+          CONFIG_INFO=$(gh api repos/cori/rtappstore/contents/apps/fpv-tracker/config.json)
+          CONFIG_SHA=$(echo "$CONFIG_INFO" | python3 -c "import sys,json; print(json.load(sys.stdin)['sha'])")
+          NEW_CONFIG=$(echo "$CONFIG_INFO" | python3 -c "
+          import sys, json, base64
+          info = json.load(sys.stdin)
+          data = json.loads(base64.b64decode(info['content']).decode())
+          data['tipi_version'] = data['tipi_version'] + 1
+          data['version'] = 'sha-$SHORT_SHA'
+          print(json.dumps(data, indent=2))
+          ")
+          NEW_CONFIG_B64=$(printf '%s' "$NEW_CONFIG" | base64 -w 0)
+          gh api repos/cori/rtappstore/contents/apps/fpv-tracker/config.json \
+            -X PUT \
+            -f message="chore: update fpv-tracker to sha-${SHORT_SHA}" \
+            -f content="${NEW_CONFIG_B64}" \
+            -f sha="${CONFIG_SHA}"
+
+          # Update docker-compose.json: pin to new image tag
+          DC_INFO=$(gh api repos/cori/rtappstore/contents/apps/fpv-tracker/docker-compose.json)
+          DC_SHA=$(echo "$DC_INFO" | python3 -c "import sys,json; print(json.load(sys.stdin)['sha'])")
+          DC_CONTENT=$(echo "$DC_INFO" | python3 -c "import sys,json,base64; print(base64.b64decode(json.load(sys.stdin)['content']).decode())")
+          NEW_DC=$(printf '%s' "$DC_CONTENT" | sed "s|ghcr.io/cori/flowchart:sha-[a-z0-9]*|${NEW_IMAGE}|g")
+          NEW_DC_B64=$(printf '%s' "$NEW_DC" | base64 -w 0)
+          gh api repos/cori/rtappstore/contents/apps/fpv-tracker/docker-compose.json \
+            -X PUT \
+            -f message="chore: update fpv-tracker image to sha-${SHORT_SHA}" \
+            -f content="${NEW_DC_B64}" \
+            -f sha="${DC_SHA}"
+
+          echo "rtappstore updated: fpv-tracker → sha-${SHORT_SHA}, tipi_version incremented"
