@@ -52,6 +52,7 @@ import { getDb } from '../db/index.js';
 - External packages first, then local imports
 - Always include `.js` extension for local imports (even for `.ts` files)
 - Use named imports; avoid `import *`
+- All `import` statements must come before any executable code — no initialisation between import groups
 
 ### TypeScript
 
@@ -187,6 +188,18 @@ public/
   sw.js            # Service worker
   manifest.json    # PWA manifest
 ```
+
+## App Versioning
+
+- The single source of truth for the version is `package.json`
+- `server.ts` reads it at startup via `readFileSync` and exposes it through `/api/health`
+- The frontend fetches `/api/health` on init and renders `v{version}` in the UI (Today tab header)
+- Never hardcode the version string anywhere else — bump `package.json` and everything follows
+
+## Pull Requests & Commits
+
+- Do not include session URLs or agent/tool identifiers in PR bodies, commit messages, or code comments
+- Keep PR descriptions clean: summary bullets + a test plan checklist is enough
 
 ## Important Notes
 
