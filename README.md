@@ -1,4 +1,4 @@
-# FPV Training Tracker
+# flowchart
 
 A self-hostable PWA for tracking FPV freestyle training progress, session logs, trick mastery, and the 20-week "Plan to Denver."
 
@@ -61,8 +61,8 @@ npm run dev
 ## Docker
 
 ```bash
-docker build -t fpv-tracker .
-docker run -p 3000:3000 -v ./data:/app/data fpv-tracker
+docker build -t flowchart .
+docker run -p 3000:3000 -v ./data:/app/data flowchart
 ```
 
 Or with docker-compose:

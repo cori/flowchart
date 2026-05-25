@@ -1,6 +1,6 @@
 {
-  "name": "FPV Training Tracker",
-  "short_name": "FPV Tracker",
+  "name": "flowchart",
+  "short_name": "flowchart",
   "description": "Track FPV freestyle training - sessions, tricks, progress to Denver",
   "start_url": "/",
   "display": "standalone",
