@@ -151,6 +151,13 @@ async function newSession() {
   clearReviewForm();
 
   document.getElementById('session-form-title').textContent = 'New Session';
+
+  // Always open to the Info tab
+  document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.form-tab[data-tab="tab-header"]').classList.add('active');
+  document.querySelectorAll('.form-tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-header').classList.add('active');
+
   document.getElementById('session-form').hidden = false;
 
   // Create session immediately so sub-items can attach
