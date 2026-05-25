@@ -79,6 +79,11 @@ a:hover { text-decoration: underline; }
   background: none; border: none; color: var(--fg2); font-size: 1.6rem;
   cursor: pointer; padding: 4px 8px; line-height: 1;
 }
+.btn-danger {
+  background: #c0392b; color: #fff; border: none;
+  border-radius: var(--radius); cursor: pointer;
+}
+.btn-danger:active { opacity: 0.8; }
 .btn-delete {
   background: none; border: none; color: var(--accent); font-size: 0.8rem;
   cursor: pointer; padding: 4px;
