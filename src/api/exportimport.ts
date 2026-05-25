@@ -1,5 +1,10 @@
+import { readFileSync } from 'node:fs';
 import { Hono } from 'hono';
 import { getDb } from '../db/index.js';
+
+const { version: APP_VERSION } = JSON.parse(
+  readFileSync(new URL('../../package.json', import.meta.url), 'utf-8')
+);
 
 const app = new Hono();
 
@@ -8,7 +13,7 @@ app.get('/export', (c) => {
   const data = {
     export_version: 1,
     exported_at: new Date().toISOString(),
-    app_version: '1.0.0',
+    app_version: APP_VERSION,
     sessions: db.prepare('SELECT * FROM sessions').all(),
     packs: db.prepare('SELECT * FROM packs').all(),
     trick_attempts: db.prepare('SELECT * FROM trick_attempts').all(),
