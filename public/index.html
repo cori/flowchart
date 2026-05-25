@@ -90,7 +90,10 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="session-form-title">New Session</h2>
-        <button class="btn-close" onclick="closeSessionForm()">&times;</button>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button id="btn-delete-session" class="btn-danger btn-small" onclick="deleteSession()" hidden>Delete</button>
+          <button class="btn-close" onclick="closeSessionForm()">&times;</button>
+        </div>
       </div>
       <div class="form-tabs">
         <button class="form-tab active" data-tab="tab-header">Info</button>

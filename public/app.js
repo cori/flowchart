@@ -151,6 +151,7 @@ async function newSession() {
   clearReviewForm();
 
   document.getElementById('session-form-title').textContent = 'New Session';
+  document.getElementById('btn-delete-session').hidden = true;
 
   // Always open to the Info tab
   document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
@@ -221,8 +222,17 @@ async function openSession(id) {
   }
 
   document.getElementById('session-form-title').textContent = `Session ${formatDate(data.date)}`;
+  document.getElementById('btn-delete-session').hidden = false;
   document.getElementById('session-form').hidden = false;
   setupAutoSave();
+}
+
+async function deleteSession() {
+  if (!confirm('Delete this session and all its data?')) return;
+  await api(`/sessions/${currentSessionId}`, { method: 'DELETE' });
+  currentSessionId = null;
+  document.getElementById('session-form').hidden = true;
+  loadSessions();
 }
 
 function clearReviewForm() {

@@ -199,7 +199,8 @@ public/
 ## Pull Requests & Commits
 
 - Do not include session URLs or agent/tool identifiers in PR bodies, commit messages, or code comments
-- Keep PR descriptions clean: summary bullets + a test plan checklist is enough
+- PR descriptions: summary bullets + a test plan checklist is enough
+- Always reference the closing issue with `Resolves #X` (or `Closes #X`) in the PR body so GitHub auto-closes it on merge
 
 ## Important Notes
 
