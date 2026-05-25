@@ -230,7 +230,8 @@ async function openSession(id) {
 async function deleteSession() {
   if (!confirm('Delete this session and all its data?')) return;
   await api(`/sessions/${currentSessionId}`, { method: 'DELETE' });
-  closeSessionForm();
+  currentSessionId = null;
+  document.getElementById('session-form').hidden = true;
   loadSessions();
 }
 
