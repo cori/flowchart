@@ -3,6 +3,8 @@ let allTricks = [];
 let allDrills = [];
 let allResources = [];
 let allSchedule = [];
+let allPlans = [];
+let activePlan = null;
 let currentSessionId = null;
 let currentSessionData = null;
 
@@ -62,21 +64,23 @@ async function loadToday() {
   const stats = await api('/progress/stats');
   const gates = await api('/progress/gates');
 
-  // Determine current week (weeks since Feb 1 2026)
-  const programStart = new Date('2026-02-01');
+  const plan = activePlan || {};
+  const programStart = new Date(plan.start_date || '2026-02-01');
+  const totalWeeks = plan.total_weeks || 20;
+  const goalDate = new Date(plan.goal_date || '2026-07-01');
+  const goalDesc = plan.goal_description || 'Denver';
+
   const now = new Date();
-  const weekNum = Math.max(1, Math.min(20, Math.floor((now - programStart) / (7 * 86400000)) + 1));
+  const weekNum = Math.max(1, Math.min(totalWeeks, Math.floor((now - programStart) / (7 * 86400000)) + 1));
   const currentWeek = allSchedule.find(w => w.week_number === weekNum) || allSchedule[0];
   const phase = currentWeek ? currentWeek.phase : 1;
   const phaseNames = { 1: 'Indoor Acro', 2: 'Outdoor Transition', 3: 'Flow & Lines', 4: 'Denver Confidence' };
 
-  document.getElementById('today-week').textContent = `Week ${weekNum} of 20`;
+  document.getElementById('today-week').textContent = `Week ${weekNum} of ${totalWeeks}`;
   document.getElementById('today-phase').textContent = `Phase ${phase}: ${phaseNames[phase] || ''}`;
 
-  // Countdown to July 2026
-  const denver = new Date('2026-07-01');
-  const daysLeft = Math.max(0, Math.ceil((denver - now) / 86400000));
-  document.getElementById('today-countdown').innerHTML = `<strong>${daysLeft}</strong> days until Denver`;
+  const daysLeft = Math.max(0, Math.ceil((goalDate - now) / 86400000));
+  document.getElementById('today-countdown').innerHTML = `<strong>${daysLeft}</strong> days until ${esc(goalDesc)}`;
 
   // Streak
   document.getElementById('today-streak').innerHTML = `
@@ -129,6 +133,14 @@ function formatDate(d) {
   return `${parts[1]}/${parts[2]}`;
 }
 
+async function populatePlanSelect(selectedId) {
+  if (!allPlans.length) allPlans = await api('/plans');
+  const el = document.getElementById('sf-plan');
+  el.innerHTML = allPlans.map(p =>
+    `<option value="${p.id}"${p.id === selectedId ? ' selected' : ''}>${esc(p.name)}</option>`
+  ).join('');
+}
+
 // New session buttons
 document.getElementById('btn-new-session').addEventListener('click', () => newSession());
 document.getElementById('btn-new-session-2').addEventListener('click', () => newSession());
@@ -143,6 +155,7 @@ async function newSession() {
   document.getElementById('sf-location').value = 'home-room-A';
   document.getElementById('sf-platform').value = 'Air65';
   document.getElementById('sf-weather').value = 'indoor';
+  await populatePlanSelect(activePlan?.id);
   document.getElementById('sf-type').value = 'blocked-drill';
   document.getElementById('sf-notes').value = '';
   document.getElementById('pack-list').innerHTML = '';
@@ -171,6 +184,7 @@ async function newSession() {
       platform: document.getElementById('sf-platform').value,
       weather: document.getElementById('sf-weather').value,
       session_type: document.getElementById('sf-type').value,
+      training_plan_id: document.getElementById('sf-plan').value || null,
     }
   });
   currentSessionId = result.id;
@@ -192,6 +206,7 @@ async function openSession(id) {
   document.getElementById('sf-weather').value = data.weather;
   document.getElementById('sf-type').value = data.session_type;
   document.getElementById('sf-notes').value = data.notes || '';
+  await populatePlanSelect(data.training_plan_id);
 
   // Render packs
   renderPacks(data.packs);
@@ -253,7 +268,7 @@ function closeSessionForm() {
 
 // Auto-save header on blur
 function setupAutoSave() {
-  const fields = ['sf-date','sf-time-start','sf-time-end','sf-location','sf-platform','sf-weather','sf-type','sf-notes'];
+  const fields = ['sf-date','sf-time-start','sf-time-end','sf-location','sf-platform','sf-weather','sf-type','sf-plan','sf-notes'];
   fields.forEach(id => {
     const el = document.getElementById(id);
     el.onchange = () => saveSessionHeader();
@@ -274,6 +289,7 @@ async function saveSessionHeader() {
       weather: document.getElementById('sf-weather').value,
       session_type: document.getElementById('sf-type').value,
       notes: document.getElementById('sf-notes').value,
+      training_plan_id: document.getElementById('sf-plan').value || null,
     }
   });
 }
@@ -585,15 +601,21 @@ async function loadDenver() {
   const gates = await api('/progress/gates');
   const denverItems = await api('/denver');
 
-  // Countdown
+  const plan = activePlan || {};
   const now = new Date();
-  const denver = new Date('2026-07-01');
-  const daysLeft = Math.max(0, Math.ceil((denver - now) / 86400000));
-  document.getElementById('denver-countdown').innerHTML = `<strong>${daysLeft}</strong> days until Denver &middot; July 2026`;
+  const goalDate = new Date(plan.goal_date || '2026-07-01');
+  const goalDesc = plan.goal_description || 'Denver';
+  const programStart = new Date(plan.start_date || '2026-02-01');
+  const totalWeeks = plan.total_weeks || 20;
+
+  document.getElementById('goals-page-title').textContent = plan.name || 'Goals';
+
+  // Countdown
+  const daysLeft = Math.max(0, Math.ceil((goalDate - now) / 86400000));
+  document.getElementById('denver-countdown').innerHTML = `<strong>${daysLeft}</strong> days until ${esc(goalDesc)}`;
 
   // Timeline
-  const programStart = new Date('2026-02-01');
-  const currentWeek = Math.max(1, Math.min(20, Math.floor((now - programStart) / (7 * 86400000)) + 1));
+  const currentWeek = Math.max(1, Math.min(totalWeeks, Math.floor((now - programStart) / (7 * 86400000)) + 1));
   document.getElementById('week-timeline').innerHTML = '<div class="timeline">' +
     allSchedule.map(w => {
       const cls = [
@@ -693,4 +715,5 @@ if ('serviceWorker' in navigator) {
 api('/health').then(data => {
   if (data.version) document.getElementById('app-version').textContent = `v${data.version}`;
 }).catch(() => {});
-loadToday();
+
+api('/plans/active').then(p => { activePlan = p; }).catch(() => {}).finally(loadToday);

@@ -171,3 +171,15 @@ CREATE TABLE IF NOT EXISTS week_schedule (
   sim_focus TEXT DEFAULT '',
   go_nogo TEXT DEFAULT ''
 );
+
+CREATE TABLE IF NOT EXISTS training_plans (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  start_date TEXT NOT NULL,
+  goal_date TEXT,
+  goal_description TEXT,
+  total_weeks INTEGER NOT NULL DEFAULT 20,
+  active INTEGER NOT NULL DEFAULT 0,
+  notes TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
