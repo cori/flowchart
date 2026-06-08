@@ -55,8 +55,8 @@ jobs:
 
       - name: Test Docker image
         run: |
-          docker build -t fpv-tracker-test .
-          docker run -d --name fpv-test -p 3000:3000 fpv-tracker-test
+          docker build -t flowchart-test .
+          docker run -d --name flowchart-test -p 3000:3000 flowchart-test
 
           # Wait for container to be ready
           for i in $(seq 1 30); do
@@ -74,7 +74,7 @@ jobs:
           [ "$TRICKS" -gt 0 ] || { echo "FAIL: container not serving data"; exit 1; }
 
           echo "Docker image test passed!"
-          docker stop fpv-test
+          docker stop flowchart-test
 
   update-rtappstore:
     needs: build-and-push
@@ -95,7 +95,7 @@ jobs:
           NEW_IMAGE="ghcr.io/cori/flowchart:sha-${SHORT_SHA}"
 
           # Update config.json: increment tipi_version only when version SHA changes
-          CONFIG_INFO=$(gh api repos/cori/rtappstore/contents/apps/fpv-tracker/config.json)
+          CONFIG_INFO=$(gh api repos/cori/rtappstore/contents/apps/flowchart/config.json)
           CONFIG_SHA=$(echo "$CONFIG_INFO" | python3 -c "import sys,json; print(json.load(sys.stdin)['sha'])")
           CURRENT_VERSION=$(echo "$CONFIG_INFO" | python3 -c "import sys,json,base64; print(json.loads(base64.b64decode(json.load(sys.stdin)['content']).decode()).get('version',''))")
           if [ "$CURRENT_VERSION" = "sha-${SHORT_SHA}" ]; then
@@ -103,15 +103,15 @@ jobs:
           else
             NEW_CONFIG=$(echo "$CONFIG_INFO" | python3 -c "import sys,json,base64; info=json.load(sys.stdin); data=json.loads(base64.b64decode(info['content']).decode()); data['tipi_version']+=1; data['version']='sha-$SHORT_SHA'; print(json.dumps(data,indent=2))")
             NEW_CONFIG_B64=$(printf '%s' "$NEW_CONFIG" | base64 -w 0)
-            gh api repos/cori/rtappstore/contents/apps/fpv-tracker/config.json \
+            gh api repos/cori/rtappstore/contents/apps/flowchart/config.json \
               -X PUT \
-              -f message="chore: update fpv-tracker to sha-${SHORT_SHA}" \
+              -f message="chore: update flowchart to sha-${SHORT_SHA}" \
               -f content="${NEW_CONFIG_B64}" \
               -f sha="${CONFIG_SHA}"
           fi
 
           # Update docker-compose.json: pin to new image tag (skip if unchanged)
-          DC_INFO=$(gh api repos/cori/rtappstore/contents/apps/fpv-tracker/docker-compose.json)
+          DC_INFO=$(gh api repos/cori/rtappstore/contents/apps/flowchart/docker-compose.json)
           DC_SHA=$(echo "$DC_INFO" | python3 -c "import sys,json; print(json.load(sys.stdin)['sha'])")
           DC_CONTENT=$(echo "$DC_INFO" | python3 -c "import sys,json,base64; print(base64.b64decode(json.load(sys.stdin)['content']).decode())")
           NEW_DC=$(printf '%s' "$DC_CONTENT" | sed "s|ghcr.io/cori/flowchart:sha-[a-z0-9]*|${NEW_IMAGE}|g")
@@ -119,9 +119,9 @@ jobs:
             echo "rtappstore docker-compose already up-to-date, skipping"
           else
             NEW_DC_B64=$(printf '%s' "$NEW_DC" | base64 -w 0)
-            gh api repos/cori/rtappstore/contents/apps/fpv-tracker/docker-compose.json \
+            gh api repos/cori/rtappstore/contents/apps/flowchart/docker-compose.json \
               -X PUT \
-              -f message="chore: update fpv-tracker image to sha-${SHORT_SHA}" \
+              -f message="chore: update flowchart image to sha-${SHORT_SHA}" \
               -f content="${NEW_DC_B64}" \
               -f sha="${DC_SHA}"
           fi

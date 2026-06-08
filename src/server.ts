@@ -30,5 +30,5 @@ app.get('/api/health', (c) => c.json({ status: 'ok', version: APP_VERSION }));
 app.use('/*', serveStatic({ root: './public' }));
 
 const port = parseInt(process.env.PORT || '3000', 10);
-console.log(`FPV Tracker listening on http://localhost:${port}`);
+console.log(`flowchart listening on http://localhost:${port}`);
 serve({ fetch: app.fetch, port });
