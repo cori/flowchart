@@ -716,4 +716,4 @@ api('/health').then(data => {
   if (data.version) document.getElementById('app-version').textContent = `v${data.version}`;
 }).catch(() => {});
 
-api('/plans/active').then(p => { activePlan = p; }).catch(() => {}).finally(loadToday);
+api('/plans/active').then(p => { if (p && !p.error) activePlan = p; }).catch(() => {}).finally(loadToday);

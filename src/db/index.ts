@@ -36,9 +36,9 @@ function initDb(db: Database.Database) {
 
   const planCount = db.prepare('SELECT COUNT(*) as c FROM training_plans').get() as { c: number };
   if (planCount.c === 0) {
-    db.prepare(
+    const planResult = db.prepare(
       'INSERT INTO training_plans (name, start_date, goal_date, goal_description, total_weeks, active) VALUES (?, ?, ?, ?, ?, 1)'
     ).run('Plan to Denver', '2026-02-01', '2026-07-01', 'Denver', 20);
-    db.prepare('UPDATE sessions SET training_plan_id = 1 WHERE training_plan_id IS NULL').run();
+    db.prepare('UPDATE sessions SET training_plan_id = ? WHERE training_plan_id IS NULL').run(planResult.lastInsertRowid);
   }
 }

@@ -13,6 +13,6 @@ RUN mkdir -p /app/data
 EXPOSE 3000
 
 ENV NODE_ENV=production
-ENV DB_PATH=/app/data/fpv-tracker.db
+ENV DB_PATH=/app/data/flowchart.db
 
 CMD ["node", "--import", "tsx", "src/server.ts"]
