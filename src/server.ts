@@ -8,6 +8,7 @@ import tricks from './api/tricks.js';
 import equipment from './api/equipment.js';
 import denver from './api/denver.js';
 import exportimport from './api/exportimport.js';
+import plans from './api/plans.js';
 
 const { version: APP_VERSION } = JSON.parse(
   readFileSync(new URL('../package.json', import.meta.url), 'utf-8')
@@ -22,6 +23,7 @@ app.route('/api/tricks', tricks);
 app.route('/api/equipment', equipment);
 app.route('/api/denver', denver);
 app.route('/api/data', exportimport);
+app.route('/api/plans', plans);
 
 // Health check
 app.get('/api/health', (c) => c.json({ status: 'ok', version: APP_VERSION }));

@@ -43,8 +43,8 @@ app.post('/', async (c) => {
   const db = getDb();
   const body = await c.req.json();
   const stmt = db.prepare(`
-    INSERT INTO sessions (date, time_start, time_end, location, platform, weather, session_type, notes)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO sessions (date, time_start, time_end, location, platform, weather, session_type, notes, training_plan_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
   const result = stmt.run(
     body.date || new Date().toISOString().split('T')[0],
@@ -54,7 +54,8 @@ app.post('/', async (c) => {
     body.platform || 'Air65',
     body.weather || 'indoor',
     body.session_type || 'blocked-drill',
-    body.notes || ''
+    body.notes || '',
+    body.training_plan_id || null
   );
   return c.json({ id: result.lastInsertRowid }, 201);
 });
@@ -65,9 +66,9 @@ app.put('/:id', async (c) => {
   const id = c.req.param('id');
   const body = await c.req.json();
   db.prepare(`
-    UPDATE sessions SET date=?, time_start=?, time_end=?, location=?, platform=?, weather=?, session_type=?, notes=?
+    UPDATE sessions SET date=?, time_start=?, time_end=?, location=?, platform=?, weather=?, session_type=?, notes=?, training_plan_id=?
     WHERE id=?
-  `).run(body.date, body.time_start, body.time_end, body.location, body.platform, body.weather, body.session_type, body.notes, id);
+  `).run(body.date, body.time_start, body.time_end, body.location, body.platform, body.weather, body.session_type, body.notes, body.training_plan_id || null, id);
   return c.json({ ok: true });
 });
 
