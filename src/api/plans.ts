@@ -10,7 +10,7 @@ app.get('/', (c) => {
 
 app.get('/active', (c) => {
   const db = getDb();
-  const plan = db.prepare('SELECT * FROM training_plans WHERE active = 1 LIMIT 1').get();
+  const plan = db.prepare('SELECT * FROM training_plans WHERE active = 1 ORDER BY id DESC LIMIT 1').get();
   return plan ? c.json(plan) : c.json({ error: 'No active plan' }, 404);
 });
 

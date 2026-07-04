@@ -28,7 +28,7 @@ curl -sf http://localhost:3000/api/tricks | jq length
 ### Environment
 
 - `PORT` - Server port (default: 3000)
-- `DB_PATH` - SQLite database path (default: `data/fpv-tracker.db`)
+- `DB_PATH` - SQLite database path (default: `data/flowchart.db`)
 
 ## Tech Stack
 
@@ -206,7 +206,7 @@ public/
 
 - The app is offline-first (PWA with service worker)
 - No authentication/authorization (self-hosted, single user)
-- Data is stored in SQLite file at `data/fpv-tracker.db`
+- Data is stored in SQLite file at `data/flowchart.db`
 - Frontend has no build step - edit HTML/CSS/JS and refresh
 
 ## Testing Workflows
