@@ -65,9 +65,9 @@ async function loadToday() {
   const gates = await api('/progress/gates');
 
   const plan = activePlan || {};
-  const programStart = new Date(plan.start_date || '2026-02-01');
+  const programStart = new Date((plan.start_date || '2026-02-01') + 'T00:00:00');
   const totalWeeks = plan.total_weeks || 20;
-  const goalDate = new Date(plan.goal_date || '2026-07-01');
+  const goalDate = new Date((plan.goal_date || '2026-07-01') + 'T00:00:00');
   const goalDesc = plan.goal_description || 'Denver';
 
   const now = new Date();
@@ -136,8 +136,9 @@ function formatDate(d) {
 async function populatePlanSelect(selectedId) {
   if (!allPlans.length) allPlans = await api('/plans');
   const el = document.getElementById('sf-plan');
-  el.innerHTML = allPlans.map(p =>
-    `<option value="${p.id}"${p.id === selectedId ? ' selected' : ''}>${esc(p.name)}</option>`
+  const selId = selectedId != null ? String(selectedId) : '';
+  el.innerHTML = '<option value="">— no plan —</option>' + allPlans.map(p =>
+    `<option value="${p.id}"${String(p.id) === selId ? ' selected' : ''}>${esc(p.name)}</option>`
   ).join('');
 }
 
@@ -603,9 +604,9 @@ async function loadDenver() {
 
   const plan = activePlan || {};
   const now = new Date();
-  const goalDate = new Date(plan.goal_date || '2026-07-01');
+  const goalDate = new Date((plan.goal_date || '2026-07-01') + 'T00:00:00');
   const goalDesc = plan.goal_description || 'Denver';
-  const programStart = new Date(plan.start_date || '2026-02-01');
+  const programStart = new Date((plan.start_date || '2026-02-01') + 'T00:00:00');
   const totalWeeks = plan.total_weeks || 20;
 
   document.getElementById('goals-page-title').textContent = plan.name || 'Goals';
