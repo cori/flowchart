@@ -18,12 +18,13 @@ app.post('/', async (c) => {
   const db = getDb();
   const body = await c.req.json();
   const isActive = body.active === true || body.active === 1 ? 1 : 0;
-  if (isActive) {
-    db.prepare('UPDATE training_plans SET active = 0').run();
-  }
-  const result = db.prepare(
-    'INSERT INTO training_plans (name, start_date, goal_date, goal_description, total_weeks, active, notes) VALUES (?, ?, ?, ?, ?, ?, ?)'
-  ).run(body.name, body.start_date, body.goal_date || null, body.goal_description || null, body.total_weeks || 20, isActive, body.notes || null);
+  const totalWeeks = parseInt(body.total_weeks) || 20;
+  const result = db.transaction(() => {
+    if (isActive) db.prepare('UPDATE training_plans SET active = 0').run();
+    return db.prepare(
+      'INSERT INTO training_plans (name, start_date, goal_date, goal_description, total_weeks, active, notes) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).run(body.name, body.start_date, body.goal_date || null, body.goal_description || null, totalWeeks, isActive, body.notes || null);
+  })();
   return c.json({ id: result.lastInsertRowid }, 201);
 });
 
@@ -32,12 +33,13 @@ app.put('/:id', async (c) => {
   const id = c.req.param('id');
   const body = await c.req.json();
   const isActive = body.active === true || body.active === 1 ? 1 : 0;
-  if (isActive) {
-    db.prepare('UPDATE training_plans SET active = 0').run();
-  }
-  db.prepare(
-    'UPDATE training_plans SET name=?, start_date=?, goal_date=?, goal_description=?, total_weeks=?, active=?, notes=? WHERE id=?'
-  ).run(body.name, body.start_date, body.goal_date || null, body.goal_description || null, body.total_weeks || 20, isActive, body.notes || null, id);
+  const totalWeeks = parseInt(body.total_weeks) || 20;
+  db.transaction(() => {
+    if (isActive) db.prepare('UPDATE training_plans SET active = 0').run();
+    db.prepare(
+      'UPDATE training_plans SET name=?, start_date=?, goal_date=?, goal_description=?, total_weeks=?, active=?, notes=? WHERE id=?'
+    ).run(body.name, body.start_date, body.goal_date || null, body.goal_description || null, totalWeeks, isActive, body.notes || null, id);
+  })();
   return c.json({ ok: true });
 });
 
